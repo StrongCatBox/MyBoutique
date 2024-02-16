@@ -13,6 +13,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 #[UniqueEntity(
     fields: ['email'],
     message: 'cet email existe deja',
+    groups: ['register']
 )]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -23,7 +24,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 180, unique: true)]
     #[Assert\Email(
-        message: 'L\'email {{ value }} n\'est pas valide'
+        message: 'L\'email {{ value }} n\'est pas valide',
+        groups: ['register']
     )]
     private ?string $email = null;
 
@@ -35,6 +37,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
 
+    #[Assert\NotBlank(
+        message: 'vous devez entrer un mdp',
+        groups: ['register']
+    )]
     /*#[Assert\Regex(
         pattern: '#(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}#',
         match: true,
@@ -44,19 +50,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[Assert\EqualTo(
         propertyPath: 'password',
-        message: 'Les deux mdp ne sont pas identiques'
+        message: 'Les deux mdp ne sont pas identiques',
+        groups: ['register']
     )]
     public $confirmPassword;
 
     private $oldPassword;
 
 
-    #[Assert\NotBlank(message: "Vous devez jdhdh")]
-    #[Assert\Regex(
+    #[Assert\NotBlank(message: "Vous devez entrer un mdp")]
+    /*  #[Assert\Regex(
         pattern: '#(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}#',
         match: true,
         message: 'le mot de passe doit faire un minimum de 8 caractere et contenir au moins une minuscule, au moins une majuscule et au moins un chiffre'
-    )]
+    )]*/
 
     private $newPassword;
 
@@ -70,7 +77,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
 
-    #[Assert\NotBlank(message: 'vous devez entrer un prenom')]
+    #[Assert\NotBlank(message: 'vous devez entrer un prenom', groups: ['register'])]
     #[Assert\Length(
         min: 2,
         max: 50,
@@ -83,6 +90,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'vous devez entrer un nom', groups: ['register'])]
+    #[Assert\Length(
+        min: 2,
+        max: 50,
+        minMessage: 'le prenom doit avoir un maximum de {{ limit }} caracteres',
+        maxMessage: 'le prenom doit avoir un maximum de {{ limit }} caracteres',
+    )]
     private ?string $lastName = null;
 
     public function getId(): ?int
