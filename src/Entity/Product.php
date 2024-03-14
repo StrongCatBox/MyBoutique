@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -18,6 +19,7 @@ class Product
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Gedmo\Slug(fields: ['name'])]
     private ?string $slug = null;
 
     #[ORM\Column(length: 255)]
@@ -60,13 +62,15 @@ class Product
         return $this->slug;
     }
 
+
+    /*
     public function setSlug(string $slug): static
     {
         $this->slug = $slug;
 
         return $this;
     }
-
+*/
     public function getPicture(): ?string
     {
         return $this->picture;

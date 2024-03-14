@@ -24,7 +24,7 @@ class ProductsFixtures extends Fixture
             $product = new Product();
             $product->setCategory($categorie)
                 ->setName($faker->words(3, true))
-                ->setSlug('$name.$i')
+                //->setSlug('$name.$i')
                 ->setDescription($faker->paragraph(3))
                 ->setSubtitle($faker->words(3, true))
                 ->setPrice($faker->numberBetween(1000, 20000))

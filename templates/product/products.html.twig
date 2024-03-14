@@ -11,29 +11,36 @@
 
 	<div class="row">
 
-		<div class="row row-cols-1 row-cols-md-2 g-4">
+		<div class="col-md-3">
+			MES FILTRES
+		</div>
 
-			{% for product in products %}
+		<div class="col-md-9">
+
+			<div class="row row-cols-1 row-cols-md-3 g-4">
+
+				{% for product in products %}
 
 
-				<div class="col">
-					<div class="card">
-						<a href="{{path('product',{'slug':product.slug})}}"><img src="/uploads/{{product.picture}}" class="card-img-top" alt="{{product.name}}"></a>
-						<div class="card-body">
-							<h5 class="card-title">{{product.name}}</h5>
-							<p class="card-text">{{product.subtitle}}</p>
-							<p>{{product.price/100}}
-								€</p>
-							<p>{{product.category}}</p>
-							<button type="button" class="btn btn-primary">Primary</button>
+					<div class="col">
+						<div class="card">
+							<a href="{{path('product',{'slug':product.slug})}}"><img src="/uploads/{{product.picture}}" class="card-img-top" alt="{{product.name}}"></a>
+							<div class="card-body">
+								<h5 class="card-title">{{product.name}}</h5>
+								<p class="card-text">{{product.subtitle}}</p>
+								<p>{{product.price/100}}
+									€</p>
+								<p>{{product.category}}</p>
 
+
+							</div>
 						</div>
 					</div>
-				</div>
 
 
-			{% endfor %}
+				{% endfor %}
 
+			</div>
 		</div>
 
 	</div>
