@@ -3,6 +3,7 @@
 namespace App\Controller\Admin;
 
 use App\Entity\Category;
+use App\Entity\Product;
 use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -43,7 +44,11 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fas fa-home');
+        yield MenuItem::section('Utilisateurs');
+        yield MenuItem::linkToCrud('Administrateurs', 'fas fa-user-shield', User::class)->setController(AdminCrudController::class);
         yield MenuItem::linkToCrud('Utilisateur', 'fas fa-users', User::class);
+        yield MenuItem::section('Commandes');
         yield MenuItem::linkToCrud('Catégorie', 'fas fa-folder', Category::class);
+        yield MenuItem::linkToCrud('Products', 'fas fa-shopping-basket', Product::class);
     }
 }
