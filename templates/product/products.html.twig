@@ -12,8 +12,21 @@
 	<div class="row">
 
 		<div class="col-md-3">
+
+			{% if products is empty %}
+
+				<div class="alert alert-danger">
+					Il n'y a pas de produit dans cette catégorie
+				</div>
+
+			{% endif %}
+			{{form_start(form)}}
 			MES FILTRES
+			{{form_end(form)}}
+			<a href="{{path('products')}}" class="btn btn-danger">
+				Reinitialiser filtre</a>
 		</div>
+
 
 		<div class="col-md-9">
 

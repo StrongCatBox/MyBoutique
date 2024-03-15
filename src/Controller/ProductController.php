@@ -3,8 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Entity\SearchFilters;
+use App\Form\SearchFiltersType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,10 +15,41 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class ProductController extends AbstractController
 {
     #[Route('/nos-produits', name: 'products')]
-    public function index(EntityManagerInterface $entityManager, ProductRepository $repo): Response
+    public function index(Request $request, ProductRepository $repo): Response
     {
 
         $products = $repo->findAll();
+
+        $searchFilter = new SearchFilters;
+
+        $form = $this->createForm(SearchFiltersType::class, $searchFilter);
+        $form->handleRequest($request);
+
+        // $products = [];
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // $categories = $searchFilter->getCategories();
+
+            if (count($searchFilter->getCategories()) > 0) {
+
+
+                foreach ($searchFilter->getCategories() as $categorie) {
+
+                    $tabId[] = $categorie->getId();
+                }
+                $products = $repo->findByCategory($tabId);
+            } else {
+                $products = $repo->findAll();
+            }
+
+            //$id = $searchFilter->getCategories()->getId();
+
+            //$products = $repo->findByCategory($id);
+
+        } else {
+            $products = $repo->findAll();
+        }
 
 
         // Aller chercher le produit avec l'ID 189 : 
@@ -39,7 +73,8 @@ class ProductController extends AbstractController
 
 
         return $this->render('product/products.html.twig', [
-            'products' => $repo->findAll()
+            'products' => $products,
+            'form' => $form->createView()
         ]);
     }
     #[Route('/produit/{slug}', name: 'product')]
@@ -50,6 +85,7 @@ class ProductController extends AbstractController
 
         return $this->render('product/product.html.twig', [
             'product' => $product
+
         ]);
     }
 }
