@@ -53,22 +53,27 @@ class Cart
 
     //enlever un produit
 
-    public function supress($id)
+    public function delete($id)
     {
         $cart = $this->requestStack->getSession()->get('cart', []);
 
-        // Vérifier si le produit correspondant à l'ID existe dans le panier
+        unset($cart[$id]);
+
+        $this->requestStack->getSession()->set('cart', $cart);
+    }
+
+    //decrementer
+    public function subtract($id)
+    {
+        $cart = $this->requestStack->getSession()->get('cart', []);
+
         if (!empty($cart[$id])) {
-            // Si la quantité est supérieure à 1, décrémenter la quantité
-            if ($cart[$id] > 1) {
-                $cart[$id]--;
-            } else {
-                // Si la quantité est égale à 1, supprimer l'article du panier
-                unset($cart[$id]);
+            $cart[$id]--;
+            if ($cart[$id] <= 0) {
+                unset($cart[$id]); // Supprimer le produit du panier si la quantité est inférieure ou égale à zéro
             }
         }
 
-        // Mettre à jour le panier dans la session
         $this->requestStack->getSession()->set('cart', $cart);
     }
 }

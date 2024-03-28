@@ -4,43 +4,61 @@
 {% endblock %}
 
 {% block content %}
-<h1 class="mt-3">Mon panier</h1>
-<p>Ensemble de vos produits ajoutés au panier</p>
-<hr>
+	<h1 class="mt-3">Mon panier</h1>
+	<p>Ensemble de vos produits ajoutés au panier</p>
+	<div class="text-end">
+		<a href="{{path('remove_cart')}}" class="btn btn-danger">Vider le panier</a>
+	</div>
+	<hr>
 
-
-<table class="table">
-	<thead>
-		<tr>
-			<th scope="col">Produits</th>
-			<th scope="col">Noms</th>
-			<th scope="col">Quantité</th>
-			<th scope="col">Prix</th>
-			<th scope="col">Total</th>
-		</tr>
-	</thead>
-	<tbody>
-
-		{% for product in cart %}
-
-
+	<table class="table">
+		<thead>
 			<tr>
-				<th scope="row"><img src="/uploads/{{product.product.picture}}" alt="" style="width:50px"></th>
-				<td>{{product.product.name}}</td>
-				<td>
-					<a href="{{path('supress_cart',{'id':product.product.id})}}">
-						<i class="fas fa-minus"></i>
-					</a>
-					{{product.quantity}}
-					<a href="{{path('add_to_cart',{'id':product.product.id})}}">
-						<i class="fas fa-plus"></i>
-					</a>
-				</td>
+				<th scope="col">Produits</th>
+				<th scope="col">Noms</th>
+				<th scope="col">Quantité</th>
+				<th scope="col">Prix</th>
+				<th scope="col">Total</th>
+				<th scope="col"></th>
 			</tr>
-		</td>
-		<td>{{product.product.price/100}}
-			€</td>
-		<td>{{(product.quantity*product.product.price/100) |number_format(2)}}
-			€</td>
-	</tbody>
-</tr>{% endfor %}</tbody></table>{% endblock %}
+		</thead>
+		<tbody>
+			{% set total = null %}
+			{% for product in cart %}
+				{% set total = total + product.quantity * product.product.price %}
+				<tr>
+					<td><img src="/uploads/{{ product.product.picture }}" alt="" style="width:50px"></td>
+					<td>{{ product.product.name }}</td>
+					<td>
+						<a href="{{ path('subtract_cart', {'id': product.product.id}) }}">
+							<i class="fas fa-minus"></i>
+						</a>
+						{{ product.quantity }}
+						<a href="{{ path('add_to_cart', {'id': product.product.id}) }}">
+							<i class="fas fa-plus"></i>
+						</a>
+					</td>
+					<td>{{ product.product.price/100 }}
+						€</td>
+					<td>{{ (product.quantity * product.product.price/100) | number_format(2) }}
+						€</td>
+					<td>
+						<a href="{{ path('delete_product', {'id': product.product.id}) }}" class="btn btn-danger">
+							<i class="fas fa-trash"></i>
+						</a>
+					</td>
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table>
+
+	<div class="text-end">
+		Nombre de produits:
+		{{cart | length}}
+		<br>
+		<b>Total:
+			{{total/100 | number_format}}
+			€</br><br><br>
+		<a href="" class="btn btn-success col-12">Valider le panier</a>
+	</div>
+{% endblock %}

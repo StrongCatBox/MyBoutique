@@ -21,7 +21,7 @@
 				€</b>
 			<hr>
 			<p>{{product.description | striptags('<br><p><strong><b><img>') | raw}}</p>
-			<a href="" class="btn btn-primary">ajouter au panier
+			<a href="{{path('add_to_cart',{'id':product.id})}}" class="btn btn-primary">ajouter au panier
 			</a>
 		</div>
 

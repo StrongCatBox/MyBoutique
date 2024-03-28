@@ -58,10 +58,20 @@ class CartController extends AbstractController
         return $this->redirectToRoute('cart');
     }
 
-    #[Route('/cart/supress{id}', name: 'supress_cart')]
-    public function supress(Cart $cart, $id)
+    #[Route('/cart/delete{id}', name: 'delete_product')]
+    public function delete(Cart $cart, $id)
     {
-        $cart->supress($id);
+        $cart->delete($id);
+        return $this->redirectToRoute('cart');
+    }
+
+
+    //diminution de la quantité d'un produit
+
+    #[Route('/cart/subtract{id}', name: 'subtract_cart')]
+    public function subtract(Cart $cart, $id)
+    {
+        $cart->subtract($id);
         return $this->redirectToRoute('cart');
     }
 }
