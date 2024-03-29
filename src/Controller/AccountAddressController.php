@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Address;
 use App\Form\AddressType;
+use App\Repository\AddressRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +23,7 @@ class AccountAddressController extends AbstractController
     }
 
     #[Route('/compte/ajouter-une-adresse', name: 'account_add_address')]
-    public function add(Request $request): Response
+    public function add(Request $request, EntityManagerInterface $manager): Response
     {
 
         $address = new Address();
@@ -31,10 +33,54 @@ class AccountAddressController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-        }
-        return $this->render('account/add_address.html.twig', [
 
+
+            $address->setUser($this->getUser());
+            $manager->persist($address);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'L\'adresse de nom ' . $address->getName() . ' a bien été crée'
+            );
+            return $this->redirectToRoute('account_address');
+        }
+
+        return $this->render('account/add_address.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+
+
+
+
+
+
+
+
+    #[Route('/compte/Supprimer-une-adresse/{id}', name: 'account_delete_address')]
+    public function delete(EntityManagerInterface $manager, Address $address): Response
+    {
+
+        if ($address->getUser() == $this->getUser()) {
+            $manager->remove($address);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                'L\'adresse de nom ' . $address->getName() . ' a bien été supprimé'
+            );
+
+            return $this->redirectToRoute('account_address');
+        } else {
+
+            $this->addFlash(
+                'danger',
+                'Vous essayez de supprimer une adresse qui ne vous appartient pas'
+            );
+        }
+
+        return $this->redirectToRoute('account_address');
     }
 }

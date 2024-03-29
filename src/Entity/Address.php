@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\AddressRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AddressRepository::class)]
 class Address
@@ -14,30 +15,62 @@ class Address
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(
+        message: 'vous devez entrer un nom',
+
+    )]
     private ?string $name = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(
+        message: 'vous devez entrer un prenom',
+
+    )]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(
+        message: 'vous devez entrer un nom',
+
+    )]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $company = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(
+        message: 'vous devez entrer une adresse',
+
+    )]
     private ?string $address = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(
+        message: 'vous devez entrer un code postal',
+
+    )]
     private ?string $postal = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(
+        message: 'vous devez entrer une ville',
+
+    )]
     private ?string $city = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(
+        message: 'vous devez entrer un pays',
+
+    )]
     private ?string $country = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(
+        message: 'vous devez entrer un telephone',
+
+    )]
     private ?string $phone = null;
 
     #[ORM\ManyToOne(inversedBy: 'addresses')]
