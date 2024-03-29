@@ -24,7 +24,7 @@
 								-
 								{{ address.city }}</p>
 							<div class="d-grid gap-2">
-								<a href="#" class="btn btn-info btn-sm mb-1">Modifier</a>
+								<a href="{{path('account_edit_address',{'id':address.id})}}" class="btn btn-info btn-sm mb-1">Modifier</a>
 								<a href="{{path('account_delete_address',{'id':address.id})}}" class="btn btn-danger btn-sm" onclick="return confirm('etes-vous sur ?')">Supprimer</a>
 							</div>
 						</div>

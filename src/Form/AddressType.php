@@ -26,7 +26,7 @@ class AddressType extends AbstractType
             ->add('city', TextType::class, ['required' => false, 'label' => false, 'attr' => ['placeHolder' => 'Entrer votre ville']])
             ->add('country', CountryType::class, ['required' => false, 'label' => false, 'attr' => ['placeHolder' => 'Choisisez votre pays']])
             ->add('phone', TextType::class, ['required' => false, 'label' => false, 'attr' => ['placeHolder' => 'Entrer votre numero de telephone']])
-            ->add('submit', SubmitType::class, ['label' => 'Ajouter l\'adresse', 'attr' => ['class' => 'btn btn-success col-12']]);
+            ->add('submit', SubmitType::class, ['label' => 'Sauvegarder l\'adresse', 'attr' => ['class' => 'btn btn-success col-12']]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
