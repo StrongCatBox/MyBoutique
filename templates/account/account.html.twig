@@ -4,21 +4,23 @@
 {% endblock %}
 
 {% block content %}
-	<h1 class="mt-4">Mon compte</h1>
-	Bienvenue
-	{{app.user.lastname}}
-	{{app.user.firstname}}
-	dans votre compte - vous pouvez gerer vos informations personelles.
+	<div class="container">
+		<h1 class="mt-4">Mon compte</h1>
+		<p>Bienvenue
+			{{ app.user.lastname }}
+			{{ app.user.firstname }}
+			dans votre compte - vous pouvez gérer vos informations personnelles.</p>
 
+		<div class="mt-4">
+			<a href="{{ path('account_password') }}" class="btn btn-primary">Modification de mot de passe</a>
+			<a href="{{ path('account_address') }}" class="btn btn-primary">Gérer mes adresses</a>
+		</div>
 
-	<br>
-
-	<br>
-	<a href="{{path('account_password')}}">Modification de mot de passe</a>
-	<br>
-	<a href="{{path('account_address')}}">Gerer mes adresses</a><br>
-	<br>
-	-les commandes<br>
+		<div class="mt-4">
+			<p>- Les commandes</p>
+			<!-- Add more content related to orders here if needed -->
+		</div>
+	</div>
 
 
 {% endblock %}

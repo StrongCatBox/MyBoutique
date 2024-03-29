@@ -4,57 +4,47 @@
 {% endblock %}
 
 {% block content %}
+	<div class="container mt-3">
+		<h1>Nos produits</h1>
 
-	<h1 class="mt-3">
-		Nos produits
-	</h1>
+		<div class="row">
+			<div class="col-md-3">
+				{% if products is empty %}
+					<div class="alert alert-danger" role="alert">
+						Il n'y a pas de produit dans cette catégorie
+					</div>
+				{% endif %}
 
-	<div class="row">
-
-		<div class="col-md-3">
-
-			{% if products is empty %}
-
-				<div class="alert alert-danger">
-					Il n'y a pas de produit dans cette catégorie
+				{{ form_start(form) }}
+				<div class="mb-3">
+					<label for="filter" class="form-label">MES FILTRES</label>
+					{{ form_widget(form) }}
 				</div>
+				{{ form_end(form) }}
 
-			{% endif %}
-			{{form_start(form)}}
-			MES FILTRES
-			{{form_end(form)}}
-			<a href="{{path('products')}}" class="btn btn-danger">
-				Reinitialiser filtre</a>
-		</div>
+				<a href="{{ path('products') }}" class="btn btn-danger">Réinitialiser filtres</a>
+			</div>
 
-
-		<div class="col-md-9">
-
-			<div class="row row-cols-1 row-cols-md-3 g-4">
-
-				{% for product in products %}
-
-
-					<div class="col">
-						<div class="card">
-							<a href="{{path('product',{'slug':product.slug})}}"><img src="/uploads/{{product.picture}}" class="card-img-top" alt="{{product.name}}"></a>
-							<div class="card-body">
-								<h5 class="card-title">{{product.name}}</h5>
-								<p class="card-text">{{product.subtitle}}</p>
-								<p>{{product.price/100}}
-									€</p>
-								<p>{{product.category}}</p>
-
-
+			<div class="col-md-9">
+				<div class="row row-cols-1 row-cols-md-3 g-4">
+					{% for product in products %}
+						<div class="col">
+							<div class="card">
+								<a href="{{ path('product', {'slug': product.slug}) }}">
+									<img src="/uploads/{{ product.picture }}" class="card-img-top" alt="{{ product.name }}">
+								</a>
+								<div class="card-body">
+									<h5 class="card-title">{{ product.name }}</h5>
+									<p class="card-text">{{ product.subtitle }}</p>
+									<p>{{ product.price/100 }}
+										€</p>
+									<p>{{ product.category }}</p>
+								</div>
 							</div>
 						</div>
-					</div>
-
-
-				{% endfor %}
-
+					{% endfor %}
+				</div>
 			</div>
 		</div>
-
 	</div>
 {% endblock %}
