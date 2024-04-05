@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Order;
+use App\Entity\OrderDetails;
 use App\Services\Cart;
 use App\Form\OrderType;
 use App\Repository\ProductRepository;
@@ -49,7 +50,7 @@ class OrderController extends AbstractController
             //dd($form->get('trasporteurs')->getData());
             $order = new Order();
             $order->setUser($this->getUser())
-                ->setCarrier($form->get('trasporteurs')->getData())
+                ->setCarrier($form->get('transporteurs')->getData())
                 ->setDelivery($form->get('addresses')->getData())
                 ->setCreatedAt(new \DateTime())
                 ->setStatut(0)
@@ -60,11 +61,23 @@ class OrderController extends AbstractController
 
             foreach ($cartComplete as $product) {
 
-                
+                $orderDetails = new OrderDetails();
+                $orderDetails->setMyOrder($order)
+                    ->setProduct($product['product'])
+                    ->setQuantity($product['quantity'])
+                    ->setPrice($product['product']->getPrice());
 
-
-                
+                $manager->persist($orderDetails);
             }
+
+
+            $manager->flush();
+
+            return $this->render('order/recap.html.twig', [
+
+                'cart' => $cartComplete,
+                // 'order' => $order,
+            ]);
         }
 
 
