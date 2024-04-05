@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\Cart;
 use App\Entity\Address;
 use App\Form\AddressType;
 use App\Repository\AddressRepository;
@@ -23,8 +24,9 @@ class AccountAddressController extends AbstractController
     }
 
     #[Route('/compte/ajouter-une-adresse', name: 'account_add_address')]
-    public function add(Request $request, EntityManagerInterface $manager): Response
+    public function add(Cart $cart, Request $request, EntityManagerInterface $manager): Response
     {
+
 
         $address = new Address();
 
@@ -43,6 +45,11 @@ class AccountAddressController extends AbstractController
                 'success',
                 'L\'adresse de nom ' . $address->getName() . ' a bien été crée'
             );
+
+            if ($cart->get()) {
+                return $this->redirectToRoute('order');
+            }
+
             return $this->redirectToRoute('account_address');
         }
 

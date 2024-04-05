@@ -106,6 +106,6 @@ class Carrier
 
     public function __toString()
     {
-        return $this->getName() . '[br]' . $this->getPrice();
+        return $this->getName() . '[br]' . $this->getPrice().'€';
     }
 }

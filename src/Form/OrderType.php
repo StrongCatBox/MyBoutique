@@ -8,6 +8,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 
 class OrderType extends AbstractType
 {
@@ -39,7 +40,9 @@ class OrderType extends AbstractType
                 'multiple' => false,
                 'expanded' => true,
                 'required' => true
-            ]);
+            ])
+            ->add('submit', SubmitType::class, ['label' => 'Valider la commande', 'attr' => ['class' => 'btn btn-success col-12']]);
+
     }
 
     public function configureOptions(OptionsResolver $resolver): void
