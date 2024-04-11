@@ -4,8 +4,10 @@ namespace App\Controller\Admin;
 
 use App\Entity\Carrier;
 use App\Entity\Category;
+use App\Entity\Order;
 use App\Entity\Product;
 use App\Entity\User;
+use App\Repository\OrderRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use EasyCorp\Bundle\EasyAdminBundle\Config\MenuItem;
@@ -14,6 +16,13 @@ use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractDashboardController;
 
 class DashboardController extends AbstractDashboardController
 {
+    private $order;
+
+    public function __construct(OrderRepository $repo)
+    {
+        $this->order = $repo;
+    }
+
     #[Route('/admin', name: 'admin')]
     public function index(): Response
     {
@@ -44,11 +53,19 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
+
+        //dd($this->order->findAll());
+        $orderValid = count($this->order->findByStatut(1));
+
+        $orderNoValid = count($this->order->findByStatut(0));
+
+
         yield MenuItem::linkToDashboard('Dashboard', 'fas fa-home');
         yield MenuItem::section('Utilisateurs');
         yield MenuItem::linkToCrud('Administrateurs', 'fas fa-user-shield', User::class)->setController(AdminCrudController::class);
         yield MenuItem::linkToCrud('Utilisateur', 'fas fa-users', User::class);
         yield MenuItem::section('Commandes');
+        yield MenuItem::linkToCrud('Commandes <span class="badge badge-success">' . $orderValid . '</span> <span class="badge badge-danger">' . $orderNoValid . '</span>', 'fas fa-shopping-cart', Order::class);
         yield MenuItem::linkToCrud('Catégorie', 'fas fa-folder', Category::class);
         yield MenuItem::linkToCrud('Products', 'fas fa-shopping-basket', Product::class);
         yield MenuItem::linkToCrud('Transporteurs', 'fas fa-truck', Carrier::class);

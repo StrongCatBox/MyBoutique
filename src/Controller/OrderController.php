@@ -74,9 +74,11 @@ class OrderController extends AbstractController
             $manager->flush();
 
             return $this->render('order/recap.html.twig', [
+                'order' => $order,
+
 
                 'cart' => $cartComplete,
-                // 'order' => $order,
+                
             ]);
         }
 

@@ -15,13 +15,25 @@
 
 			<div class="col-md-6">
 
-				recap adresse et transporteur
+				<strong>Adresse de livraison</strong><br>
+				{{order.delivery | replace({'[br]': '<br>'}) | raw}}
+				<hr>
+				<strong>Mon transporteur
+				</strong><br>
+
+				{{order.carrier.name}}<br>
+				{{order.carrier.description}}<br>
+				{{order.carrier.price}}
+				€
 
 			</div>
 
 			<div class="col-md-6">
 
+				{% set total = null %}
 				{% for product in cart %}
+					{% set total = total + product.quantity * product.product.price %}
+
 
 					<div class="row mt-3">
 						<div class="col-2">
@@ -38,6 +50,19 @@
 					</div>
 
 				{% endfor %}
+
+				<hr>
+				<strong>Sous-total</strong>
+				{{total/100 | number_format(2)}}
+				€<br>
+				<strong>Livraison:</strong>
+				{{order.carrier.price}}
+				€<br>
+				<hr>
+				<strong>Total:
+				</strong>
+				{{(total/100 + order.carrier.price) | number_format(2)}}
+				€
 
 			</div>
 
