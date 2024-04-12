@@ -2,10 +2,12 @@
 
 namespace App\Controller;
 
+use Stripe\Stripe;
 use App\Entity\Order;
-use App\Entity\OrderDetails;
 use App\Services\Cart;
 use App\Form\OrderType;
+use App\Entity\OrderDetails;
+use Stripe\Checkout\Session;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,7 +46,7 @@ class OrderController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-
+            $reference = uniqid();
             // dd($form->getData());
             //dd($form->get('addresses')->getData());
             //dd($form->get('trasporteurs')->getData());
@@ -54,7 +56,7 @@ class OrderController extends AbstractController
                 ->setDelivery($form->get('addresses')->getData())
                 ->setCreatedAt(new \DateTime())
                 ->setStatut(0)
-                ->setReference(uniqid());
+                ->setReference($reference);
 
 
             $manager->persist($order);
@@ -68,24 +70,87 @@ class OrderController extends AbstractController
                     ->setPrice($product['product']->getPrice());
 
                 $manager->persist($orderDetails);
+
+                $stripe_products[] =          [
+
+
+                    'price_data' => [
+                        'currency' => 'eur',
+                        'product_data' => [
+                            'name' => $product['product']->getName(),
+                            'images' => [
+                                $_SERVER['HTTP_ORIGIN'] . '/uploads' . $product['product']->getPicture()
+
+                            ]
+
+                        ],
+
+                        'unit_amount' => $product['product']->getPrice(),
+                    ],
+
+                    'quantity' => $product['quantity']
+
+                ];
             }
 
+            //ajout du transporteur
 
-            $manager->flush();
+            $stripe_products[] = [
+
+                'price_data' => [
+                    'currency' => 'eur',
+                    'product_data' => [
+                        'name' => $order->getCarrier()->getName(),
+
+
+                    ],
+
+                    'unit_amount' => $order->getCarrier()->getPrice() * 100,
+                ],
+
+                'quantity' => 1
+
+            ];
+
+
+
+
+
+
+
+            $YOUR_DOMAIN = $_SERVER['HTTP_ORIGIN'];
+
+            $stripeSecretKey = $this->getParameter('STRIPE_KEY');
+            Stripe::setApiKey($stripeSecretKey);
+
+            $checkout_session = Session::create([
+                'line_items' => $stripe_products,
+                'mode' => 'payment',
+                'success_url' => $YOUR_DOMAIN . '/compte/commande/merci/{CHECKOUT_SESSION_ID}/' . $order->getReference(),
+                'cancel_url' => $YOUR_DOMAIN . '/compte/commande/erreur/{CHECKOUT_SESSION_ID}',
+            ]);
+
+            // dd($checkout_session->url);
+
+
+
+            // $manager->flush();
 
             return $this->render('order/recap.html.twig', [
                 'order' => $order,
 
 
                 'cart' => $cartComplete,
-                
+                'url_stripe' => $checkout_session->url
+
             ]);
         }
 
 
         return $this->render('order/order.html.twig', [
             'form' => $form->createView(),
-            'cart' => $cartComplete
+            'cart' => $cartComplete,
+
 
         ]);
     }
