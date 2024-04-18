@@ -2,20 +2,21 @@
 
 namespace App\Controller;
 
-use App\Repository\OrderRepository;
+use App\Entity\Order;
 use Stripe\StripeClient;
+use App\Repository\OrderRepository;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OrderSuccessController extends AbstractController
 {
-    #[Route('/compte/commande/merci/{CHECKOUT_SESSION_ID}/{reference}', name: 'order_success')]
-    public function index($CHECKOUT_SESSION_ID, OrderRepository $repo, $reference): Response
+    #[Route('/compte/commande/merci/{stripeSessionId}', name: 'order_success')]
+    public function index(Order $order): Response
 
     {
 
-        dd($repo->findOneByReference($reference));
+        dd($order);
         //dd($CHECKOUT_SESSION_ID);
 
         $stripeSecretKey = $this->getParameter('STRIPE_KEY');

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+
 use Stripe\Stripe;
 use App\Entity\Order;
 use App\Services\Cart;
@@ -126,20 +127,21 @@ class OrderController extends AbstractController
             $checkout_session = Session::create([
                 'line_items' => $stripe_products,
                 'mode' => 'payment',
-                'success_url' => $YOUR_DOMAIN . '/compte/commande/merci/{CHECKOUT_SESSION_ID}/' . $order->getReference(),
+                'success_url' => $YOUR_DOMAIN . '/compte/commande/merci/{CHECKOUT_SESSION_ID}/',
                 'cancel_url' => $YOUR_DOMAIN . '/compte/commande/erreur/{CHECKOUT_SESSION_ID}',
             ]);
 
-            // dd($checkout_session->url);
+            $stripeUrlId= $stripeSession->getStripeSession($cartComplete,$order);
+            $order->setStripeSessionId($checkout_session->id);
+
+            //dd($checkout_session);
 
 
 
-            // $manager->flush();
+            $manager->flush();
 
             return $this->render('order/recap.html.twig', [
                 'order' => $order,
-
-
                 'cart' => $cartComplete,
                 'url_stripe' => $checkout_session->url
 
